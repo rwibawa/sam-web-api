@@ -355,6 +355,21 @@ $ aws dynamodb create-table --table-name SampleTable --attribute-definitions Att
 
 $ sam.cmd local invoke getAllItemsFunction --event events/event-get-all-items.json --parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=SAMPLE_TABLE,ParameterValue=SampleTable --docker-network local-dev
 
+E:\workspace_sam\sam-web-api>sam local generate-event apigateway aws-proxy --method GET --path document --body "" > local-event.json
+
+E:\workspace_sam\sam-web-api>sam local invoke getAllItemsFunction --event local-event.json --docker-network local-dev
+Invoking src/handlers/get-all-items.getAllItemsHandler (nodejs14.x)
+Skip pulling image and use local one: public.ecr.aws/sam/emulation-nodejs14.x:rapid-1.35.0-x86_64.
+
+Mounting E:\workspace_sam\sam-web-api\.aws-sam\build\getAllItemsFunction as /var/task:ro,delegated inside runtime container
+START RequestId: dfbf0480-0db2-42ea-8890-4a42d71d9096 Version: $LATEST
+} } protocol: 'HTTP/1.1'xy+}',Agent String',',adbeef',bp027Y2JvkCPNLmGJHqlaA==' ],q=0.8', {
+2021-11-28T08:13:59.852Z        dfbf0480-0db2-42ea-8890-4a42d71d9096    INFO    response from: /document statusCode: 200 body: [{"name":"XBOX X","id":"1"},{"name":"AndroidOne","id":"4"},{"name":"Google Pixel 6 Pro","id":"3"},{"name":"Macbook Pro","id":"2"}]
+END RequestId: dfbf0480-0db2-42ea-8890-4a42d71d9096
+REPORT RequestId: dfbf0480-0db2-42ea-8890-4a42d71d9096  Init Duration: 0.10 ms  Duration: 4437.26 ms    Billed Duration: 4438 ms        Memory Size: 128 MB     Max Memory Used: 128 MB
+{"statusCode":200,"body":"[{\"name\":\"XBOX X\",\"id\":\"1\"},{\"name\":\"AndroidOne\",\"id\":\"4\"},{\"name\":\"Google Pixel 6 Pro\",\"id\":\"3\"},{\"name\":\"Macbook Pro\",\"id\":\"2\"}]"}
+
+
 # Start local API
 $ sam.cmd local start-api --parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=DDBTableName,ParameterValue=documentTable --docker-network local-dev
 
@@ -375,8 +390,14 @@ $ aws dynamodb delete-table --table-name SampleTable --endpoint-url http://local
 ```
 
 * [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
+*SampleTable* Metadata:
+![SampleTable Metadata](docs/img/Remote-SampleTable-Metadata.jpg)
 
-## DynamoDB Queries
+*SampleTable* Items:
+![SampleTable Items](docs/img/Remote-SampleTable-Items.jpg)
+
+
+### DynamoDB Queries
 ```sh
 
 $ aws dynamodb create-table \
