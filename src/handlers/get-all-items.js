@@ -4,8 +4,15 @@
 const tableName = process.env.SAMPLE_TABLE;
 
 // Create a DocumentClient that represents the query to add an item
-const dynamodb = require('aws-sdk/clients/dynamodb');
-const docClient = new dynamodb.DocumentClient();
+// const dynamodb = require('aws-sdk/clients/dynamodb');
+// const docClient = new dynamodb.DocumentClient();
+const AWS = require('aws-sdk');
+AWS.config.update({ region: process.env.REGION, apiVersion: '2012-08-10' });
+if (process.env.AWS_SAM_LOCAL) {
+    AWS.config.update({ dynamodb: { endpoint: 'http://dynamodb-local:8000' } });
+}
+
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 /**
  * A simple example includes a HTTP get method to get all items from a DynamoDB table.

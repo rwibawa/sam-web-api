@@ -1,8 +1,15 @@
 // Create clients and set shared const values outside of the handler.
 
 // Create a DocumentClient that represents the query to add an item
-const dynamodb = require('aws-sdk/clients/dynamodb');
-const docClient = new dynamodb.DocumentClient();
+// const dynamodb = require('aws-sdk/clients/dynamodb');
+// const docClient = new dynamodb.DocumentClient();
+const AWS = require('aws-sdk');
+AWS.config.update({ region: process.env.REGION, apiVersion: '2012-08-10' });
+if (process.env.AWS_SAM_LOCAL) {
+    AWS.config.update({ dynamodb: { endpoint: 'http://dynamodb-local:8000' } });
+}
+
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 // Get the DynamoDB table name from environment variables
 const tableName = process.env.SAMPLE_TABLE;

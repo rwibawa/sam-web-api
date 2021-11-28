@@ -9,28 +9,31 @@
       "request": "direct-invoke",
       "name": "sam-web-api:src/handlers/put-item.putItemHandler (nodejs14.x)",
       "invokeTarget": {
-        "target": "api",
-        "templatePath": "${workspaceFolder}/template.yaml",
-        "logicalId": "putItemFunction"
-      },
-      "api": {
-        "path": "/",
-        "httpMethod": "post",
-        "payload": {
-          "json": {
-            "id": "4",
-            "name": "AndroidOne"
-          }
-        }
+        "target": "code",
+        "projectRoot": "${workspaceFolder}/",
+        "lambdaHandler": "src/handlers/put-item.putItemHandler"
       },
       "lambda": {
         "runtime": "nodejs14.x",
+        "payload": {},
+        "environmentVariables": {}
+      }
+    },
+    {
+      "type": "aws-sam",
+      "request": "direct-invoke",
+      "name": "lambda-nodejs14.x (nodejs14.x)",
+      "invokeTarget": {
+        "target": "template",
+        "templatePath": "${workspaceFolder}/template.yaml",
+        "logicalId": "getAllItemsFunction"
+      },
+      "lambda": {
+        "payload": {},
         "environmentVariables": {
+          "ENVIRONMENT": "local",
           "SAMPLE_TABLE": "SampleTable"
         }
-      },
-      "sam": {
-        "dockerNetwork": "local-dev"
       }
     },
     {
@@ -50,18 +53,13 @@
         }
       },
       "lambda": {
-        "runtime": "nodejs14.x",
-        "environmentVariables": {
-          "SAMPLE_TABLE": "SampleTable"
-        }
+        "runtime": "nodejs14.x"
       },
       "aws": {
         "region": "us-west-1",
         "credentials": "profile:default"
       },
-      "sam": {
-        "dockerNetwork": "local-dev"
-      }
+      "sam": {}
     }
   ]
 }

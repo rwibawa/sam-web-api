@@ -320,6 +320,7 @@ $ aws dynamodb describe-table --table-name "sam-web-api-SampleTable-PF99XN5AA213
 ## 4. Install DynamoDB locally.
 * [Deploy local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
 ```sh
+$ docker network create local-dev
 $ docker-compose up
 Creating network "sam-web-api_default" with the default driver
 Pulling dynamodb-local (amazon/dynamodb-local:latest)...
@@ -338,6 +339,9 @@ dynamodb-local    | shouldDelayTransientStatuses:       false
 dynamodb-local    | CorsParams: *
 dynamodb-local    |
 
+# Or
+$ docker-compose up -d
+$ docker logs dynamodb-local
 ```
 * [aws-cli to access local db](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.CLI.html)
 ```sh
@@ -345,6 +349,35 @@ $ aws dynamodb list-tables --endpoint-url http://localhost:8000
 {
     "TableNames": []
 }
+
+# Create SampleTable
+$ aws dynamodb create-table --table-name SampleTable --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2 --endpoint-url http://localhost:8000
+
+$ sam.cmd local invoke getAllItemsFunction --event events/event-get-all-items.json --parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=SAMPLE_TABLE,ParameterValue=SampleTable --docker-network local-dev
+
+# Start local API
+$ sam.cmd local start-api --parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=DDBTableName,ParameterValue=documentTable --docker-network local-dev
+
+# API calls
+$ curl --location --request POST 'http://localhost:3000' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": "1",
+    "name": "Google Pixel 6 Pro"
+}'
+
+$ curl --location --request GET 'http://localhost:3000'
+$ curl --location --request GET 'http://localhost:3000/3'
+
+# Delete SampleTable
+$ aws dynamodb delete-table --table-name SampleTable --endpoint-url http://localhost:8000
+
+```
+
+* [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
+
+## DynamoDB Queries
+```sh
 
 $ aws dynamodb create-table \
     --endpoint-url http://localhost:8000 \
@@ -461,7 +494,4 @@ $ aws dynamodb query --endpoint-url http://localhost:8000 --table-name Music --k
     "ScannedCount": 1,
     "ConsumedCapacity": null
 }
-
 ```
-
-* [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)

@@ -1,160 +1,470 @@
 # sam-web-api
 
-This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
+## 1. Setup
+```sh
+$ sam.cmd init
+Which template source would you like to use?
+        1 - AWS Quick Start Templates
+        2 - Custom Template Location
+Choice: 1
+What package type would you like to use?
+        1 - Zip (artifact is a zip uploaded to S3)
+        2 - Image (artifact is an image uploaded to an ECR image repository)
+Package type: 1
 
-- `src` - Code for the application's Lambda function.
-- `events` - Invocation events that you can use to invoke the function.
-- `__tests__` - Unit tests for the application code. 
-- `template.yaml` - A template that defines the application's AWS resources.
+Which runtime would you like to use?
+        1 - nodejs14.x
+        2 - python3.9
+        3 - ruby2.7
+        4 - go1.x
+        5 - java11
+        6 - dotnetcore3.1
+        7 - nodejs12.x
+        8 - nodejs10.x
+        9 - python3.8
+        10 - python3.7
+        11 - python3.6
+        12 - python2.7
+        13 - ruby2.5
+        14 - java8.al2
+        15 - java8
+        16 - dotnetcore2.1
+Runtime: 1
 
-The application uses several AWS resources, including Lambda functions, an API Gateway API, and Amazon DynamoDB tables. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+Project name [sam-app]: sam-web-api
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open-source plugin for popular IDEs that uses the AWS SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds step-through debugging for Lambda function code. 
+Cloning from https://github.com/aws/aws-sam-cli-app-templates
 
-To get started, see the following:
+AWS quick start application templates:
+        1 - Hello World Example
+        2 - Step Functions Sample App (Stock Trader)
+        3 - Quick Start: From Scratch
+        4 - Quick Start: Scheduled Events
+        5 - Quick Start: S3
+        6 - Quick Start: SNS
+        7 - Quick Start: SQS
+        8 - Quick Start: Web Backend
+Template selection: 8
 
-* [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-* [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+    -----------------------
+    Generating application:
+    -----------------------
+    Name: sam-web-api
+    Runtime: nodejs14.x
+    Architectures: x86_64
+    Dependency Manager: npm
+    Application Template: quick-start-web
+    Output Directory: .
 
-## Deploy the sample application
+    Next application steps can be found in the README file at ./sam-web-api/README.md
 
-The AWS SAM CLI is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
 
-To use the AWS SAM CLI, you need the following tools:
+    Commands you can use next
+    =========================
+    [*] Create pipeline: cd sam-web-api && sam pipeline init --bootstrap
 
-* AWS SAM CLI - [Install the AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html).
-* Node.js - [Install Node.js 14](https://nodejs.org/en/), including the npm package management tool.
-* Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community).
 
-To build and deploy your application for the first time, run the following in your shell:
+$ cd sam-web-api/
+$ sam.cmd build
+Building codeuri: E:\workspace_sam\sam-web-api runtime: nodejs14.x metadata: {} architecture: x86_64 functions: ['getAllItemsFunction', 'getByIdFunction', 'putItemFunction']
+Running NodejsNpmBuilder:NpmPack
+Running NodejsNpmBuilder:CopyNpmrc
+Running NodejsNpmBuilder:CopySource
+Running NodejsNpmBuilder:NpmInstall
+Running NodejsNpmBuilder:CleanUpNpmrc
 
-```bash
-sam build
-sam deploy --guided
+Build Succeeded
+
+Built Artifacts  : .aws-sam\build
+Built Template   : .aws-sam\build\template.yaml
+
+Commands you can use next
+=========================
+[*] Invoke Function: sam local invoke
+[*] Deploy: sam deploy --guided
+
+
+$ sam.cmd local start-api
 ```
 
-The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
+## 2. Deploy the APIs
+```sh
+$ sam.cmd deploy --guided
 
-* **Stack Name**: The name of the stack to deploy to CloudFormation. This should be unique to your account and region, and a good starting point would be something matching your project name.
-* **AWS Region**: The AWS region you want to deploy your app to.
-* **Confirm changes before deploy**: If set to yes, any change sets will be shown to you before execution for manual review. If set to no, the AWS SAM CLI will automatically deploy application changes.
-* **Allow SAM CLI IAM role creation**: Many AWS SAM templates, including this example, create AWS IAM roles required for the AWS Lambda function(s) included to access AWS services. By default, these are scoped down to minimum required permissions. To deploy an AWS CloudFormation stack which creates or modifies IAM roles, the `CAPABILITY_IAM` value for `capabilities` must be provided. If permission isn't provided through this prompt, to deploy this example you must explicitly pass `--capabilities CAPABILITY_IAM` to the `sam deploy` command.
-* **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
+Configuring SAM deploy
+======================
 
-The API Gateway endpoint API will be displayed in the outputs when the deployment is complete.
+        Looking for config file [samconfig.toml] :  Not found
 
-## Use the AWS SAM CLI to build and test locally
+        Setting default arguments for 'sam deploy'
+        =========================================
+        Stack Name [sam-app]: sam-web-api
+        AWS Region [us-west-1]:
+        #Shows you resources changes to be deployed and require a 'Y' to initiate deploy
+        Confirm changes before deploy [y/N]:
+        #SAM needs permission to be able to create roles to connect to the resources in your template
+        Allow SAM CLI IAM role creation [Y/n]:
+        #Preserves the state of previously provisioned resources when an operation fails
+        Disable rollback [y/N]:
+        getAllItemsFunction may not have authorization defined, Is this okay? [y/N]: y
+        getByIdFunction may not have authorization defined, Is this okay? [y/N]: y
+        putItemFunction may not have authorization defined, Is this okay? [y/N]: y
+        Save arguments to configuration file [Y/n]:
+        SAM configuration file [samconfig.toml]:
+        SAM configuration environment [default]:
 
-Build your application by using the `sam build` command.
+        Looking for resources needed for deployment:
+         Managed S3 bucket: aws-sam-cli-managed-default-samclisourcebucket-1ht1pd3yeqhsn
+         A different default S3 bucket can be set in samconfig.toml
 
-```bash
-my-application$ sam build
+        Saved arguments to config file
+        Running 'sam deploy' for future deployments will use the parameters saved above.
+        The above parameters can be changed by modifying samconfig.toml
+        Learn more about samconfig.toml syntax at
+        https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
+
+Uploading to sam-web-api/486e7fd1544a58b113bc490045dd9d21  9354277 / 9354277  (100.00%)
+File with same data already exists at sam-web-api/486e7fd1544a58b113bc490045dd9d21, skipping upload
+File with same data already exists at sam-web-api/486e7fd1544a58b113bc490045dd9d21, skipping upload
+
+        Deploying with following values
+        ===============================
+        Stack name                   : sam-web-api
+        Region                       : us-west-1
+        Confirm changeset            : False
+        Disable rollback             : False
+        Deployment s3 bucket         : aws-sam-cli-managed-default-samclisourcebucket-1ht1pd3yeqhsn
+        Capabilities                 : ["CAPABILITY_IAM"]
+        Parameter overrides          : {}
+        Signing Profiles             : {}
+
+Initiating deployment
+=====================
+Uploading to sam-web-api/85555fa3a397c035fcad8a689e239935.template  2912 / 2912  (100.00%)
+Waiting for changeset to be created..
+
+CloudFormation stack changeset
+-------------------------------------------------------------------------------------------------
+Operation                LogicalResourceId        ResourceType             Replacement
+-------------------------------------------------------------------------------------------------
++ Add                    SampleTable              AWS::DynamoDB::Table     N/A
++ Add                    ServerlessRestApiDeplo   AWS::ApiGateway::Deplo   N/A
+                         ymenta4d359a69a          yment
++ Add                    ServerlessRestApiProdS   AWS::ApiGateway::Stage   N/A
+                         tage
++ Add                    ServerlessRestApi        AWS::ApiGateway::RestA   N/A
+                                                  pi
++ Add                    getAllItemsFunctionApi   AWS::Lambda::Permissio   N/A
+                         PermissionProd           n
++ Add                    getAllItemsFunctionRol   AWS::IAM::Role           N/A
+                         e
++ Add                    getAllItemsFunction      AWS::Lambda::Function    N/A
++ Add                    getByIdFunctionApiPerm   AWS::Lambda::Permissio   N/A
+                         issionProd               n
++ Add                    getByIdFunctionRole      AWS::IAM::Role           N/A
++ Add                    getByIdFunction          AWS::Lambda::Function    N/A
++ Add                    putItemFunctionApiPerm   AWS::Lambda::Permissio   N/A
+                         issionProd               n
++ Add                    putItemFunctionRole      AWS::IAM::Role           N/A
++ Add                    putItemFunction          AWS::Lambda::Function    N/A
+-------------------------------------------------------------------------------------------------
+
+Changeset created successfully. arn:aws:cloudformation:us-west-1:450837389776:changeSet/samcli-deploy1637995578/17705f1c-c27c-4a79-a4b3-262fd12d4a96
+
+
+2021-11-26 22:46:29 - Waiting for stack create/update to complete
+
+CloudFormation events from stack operations
+-------------------------------------------------------------------------------------------------
+ResourceStatus           ResourceType             LogicalResourceId        ResourceStatusReason
+-------------------------------------------------------------------------------------------------
+CREATE_IN_PROGRESS       AWS::DynamoDB::Table     SampleTable              -
+CREATE_IN_PROGRESS       AWS::DynamoDB::Table     SampleTable              Resource creation
+                                                                           Initiated
+CREATE_COMPLETE          AWS::DynamoDB::Table     SampleTable              -
+CREATE_IN_PROGRESS       AWS::IAM::Role           getAllItemsFunctionRol   Resource creation
+                                                  e                        Initiated
+CREATE_IN_PROGRESS       AWS::IAM::Role           putItemFunctionRole      -
+CREATE_IN_PROGRESS       AWS::IAM::Role           getByIdFunctionRole      -
+CREATE_IN_PROGRESS       AWS::IAM::Role           getAllItemsFunctionRol   -
+                                                  e
+CREATE_IN_PROGRESS       AWS::IAM::Role           putItemFunctionRole      Resource creation
+                                                                           Initiated
+CREATE_IN_PROGRESS       AWS::IAM::Role           getByIdFunctionRole      Resource creation
+                                                                           Initiated
+CREATE_COMPLETE          AWS::IAM::Role           putItemFunctionRole      -
+CREATE_COMPLETE          AWS::IAM::Role           getAllItemsFunctionRol   -
+                                                  e
+CREATE_COMPLETE          AWS::IAM::Role           getByIdFunctionRole      -
+CREATE_IN_PROGRESS       AWS::Lambda::Function    getAllItemsFunction      -
+CREATE_IN_PROGRESS       AWS::Lambda::Function    putItemFunction          -
+CREATE_IN_PROGRESS       AWS::Lambda::Function    getByIdFunction          -
+CREATE_IN_PROGRESS       AWS::Lambda::Function    putItemFunction          Resource creation
+                                                                           Initiated
+CREATE_IN_PROGRESS       AWS::Lambda::Function    getByIdFunction          Resource creation
+                                                                           Initiated
+CREATE_IN_PROGRESS       AWS::Lambda::Function    getAllItemsFunction      Resource creation
+                                                                           Initiated
+CREATE_COMPLETE          AWS::Lambda::Function    getByIdFunction          -
+CREATE_COMPLETE          AWS::Lambda::Function    putItemFunction          -
+CREATE_COMPLETE          AWS::Lambda::Function    getAllItemsFunction      -
+CREATE_IN_PROGRESS       AWS::ApiGateway::RestA   ServerlessRestApi        -
+                         pi
+CREATE_IN_PROGRESS       AWS::ApiGateway::RestA   ServerlessRestApi        Resource creation
+                         pi                                                Initiated
+CREATE_COMPLETE          AWS::ApiGateway::RestA   ServerlessRestApi        -
+                         pi
+CREATE_IN_PROGRESS       AWS::Lambda::Permissio   getByIdFunctionApiPerm   Resource creation
+                         n                        issionProd               Initiated
+CREATE_IN_PROGRESS       AWS::Lambda::Permissio   getAllItemsFunctionApi   Resource creation
+                         n                        PermissionProd           Initiated
+CREATE_IN_PROGRESS       AWS::Lambda::Permissio   putItemFunctionApiPerm   -
+                         n                        issionProd
+CREATE_IN_PROGRESS       AWS::ApiGateway::Deplo   ServerlessRestApiDeplo   -
+                         yment                    ymenta4d359a69a
+CREATE_IN_PROGRESS       AWS::Lambda::Permissio   getByIdFunctionApiPerm   -
+                         n                        issionProd
+CREATE_IN_PROGRESS       AWS::Lambda::Permissio   getAllItemsFunctionApi   -
+                         n                        PermissionProd
+CREATE_IN_PROGRESS       AWS::ApiGateway::Deplo   ServerlessRestApiDeplo   Resource creation
+                         yment                    ymenta4d359a69a          Initiated
+CREATE_IN_PROGRESS       AWS::Lambda::Permissio   putItemFunctionApiPerm   Resource creation
+                         n                        issionProd               Initiated
+CREATE_COMPLETE          AWS::ApiGateway::Deplo   ServerlessRestApiDeplo   -
+                         yment                    ymenta4d359a69a
+CREATE_IN_PROGRESS       AWS::ApiGateway::Stage   ServerlessRestApiProdS   -
+                                                  tage
+CREATE_IN_PROGRESS       AWS::ApiGateway::Stage   ServerlessRestApiProdS   Resource creation
+                                                  tage                     Initiated
+CREATE_COMPLETE          AWS::ApiGateway::Stage   ServerlessRestApiProdS   -
+                                                  tage
+CREATE_COMPLETE          AWS::Lambda::Permissio   putItemFunctionApiPerm   -
+                         n                        issionProd
+CREATE_COMPLETE          AWS::Lambda::Permissio   getByIdFunctionApiPerm   -
+                         n                        issionProd
+CREATE_COMPLETE          AWS::Lambda::Permissio   getAllItemsFunctionApi   -
+                         n                        PermissionProd
+CREATE_COMPLETE          AWS::CloudFormation::S   sam-web-api              -
+                         tack
+-------------------------------------------------------------------------------------------------
+
+CloudFormation outputs from deployed stack
+-------------------------------------------------------------------------------------------------
+Outputs
+-------------------------------------------------------------------------------------------------
+Key                 WebEndpoint
+Description         API Gateway endpoint URL for Prod stage
+Value               https://whosrt5g9k.execute-api.us-west-1.amazonaws.com/Prod/
+-------------------------------------------------------------------------------------------------
+
+Successfully created/updated stack - sam-web-api in us-west-1
 ```
 
-The AWS SAM CLI installs dependencies that are defined in `package.json`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
+## 3. Invoke APIs
+```sh
+$ curl --location --request POST 'https://whosrt5g9k.execute-api.us-west-1.amazonaws.com/Prod/' \
+ --header 'Content-Type: application/json' \
+ --data-raw '{
+     "id": "3",
+     "name": "XBOX X"
+ }'
 
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
+{"id":"3","name":"XBOX X"}
 
-Run functions locally and invoke them with the `sam local invoke` command.
+$ curl --location --request GET 'https://whosrt5g9k.execute-api.us-west-1.amazonaws.com/Prod/'
+[{"id":"2","name":"MacBook Pro"},{"id":"1","name":"Google Pixel 6 Pro"},{"id":"3","name":"XBOX X"}]
 
-```bash
-my-application$ sam local invoke putItemFunction --event events/event-post-item.json
-my-application$ sam local invoke getAllItemsFunction --event events/event-get-all-items.json
+$ curl --location --request GET 'https://whosrt5g9k.execute-api.us-west-1.amazonaws.com/Prod/2'
+{"id":"2","name":"MacBook Pro"}
+
+$ aws dynamodb list-tables
+{
+    "TableNames": [
+        "archived_objects",
+        "sam-web-api-SampleTable-PF99XN5AA213"
+    ]
+}
+
+$ aws dynamodb describe-table --table-name "sam-web-api-SampleTable-PF99XN5AA213"
+{
+    "Table": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "sam-web-api-SampleTable-PF99XN5AA213",
+        "KeySchema": [
+            {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2021-11-26T22:46:34.086000-08:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 2,
+            "WriteCapacityUnits": 2
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:us-west-1:450837389776:table/sam-web-api-SampleTable-PF99XN5AA213",
+        "TableId": "3de9302c-f5ef-4fd0-81ec-9179a365e761"
+    }
+}
+
 ```
 
-The AWS SAM CLI can also emulate your application's API. Use the `sam local start-api` command to run the API locally on port 3000.
-
-```bash
-my-application$ sam local start-api
-my-application$ curl http://localhost:3000/
-```
-
-The AWS SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
-
-```yaml
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /
-            Method: GET
-```
-
-## Add a resource to your application
-The application template uses AWS SAM to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources, such as functions, triggers, and APIs. For resources that aren't included in the [AWS SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use the standard [AWS CloudFormation resource types](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html).
-
-Update `template.yaml` to add a dead-letter queue to your application. In the **Resources** section, add a resource named **MyQueue** with the type **AWS::SQS::Queue**. Then add a property to the **AWS::Serverless::Function** resource named **DeadLetterQueue** that targets the queue's Amazon Resource Name (ARN), and a policy that grants the function permission to access the queue.
+## 4. Install DynamoDB locally.
+* [Deploy local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
+```sh
+$ docker-compose up
+Creating network "sam-web-api_default" with the default driver
+Pulling dynamodb-local (amazon/dynamodb-local:latest)...
+latest: Pulling from amazon/dynamodb-local
+Digest: sha256:95358cb2eb7f73fab027d1ec7319c75e2ff1e60830437c01dce772e1e8f2978c
+Status: Downloaded newer image for amazon/dynamodb-local:latest
+Creating dynamodb-local ...
+Creating dynamodb-local ... done
+Attaching to dynamodb-local
+dynamodb-local    | Initializing DynamoDB Local with the following configuration:
+dynamodb-local    | Port:       8000
+dynamodb-local    | InMemory:   false
+dynamodb-local    | DbPath:     ./data
+dynamodb-local    | SharedDb:   true
+dynamodb-local    | shouldDelayTransientStatuses:       false
+dynamodb-local    | CorsParams: *
+dynamodb-local    |
 
 ```
-Resources:
-  MyQueue:
-    Type: AWS::SQS::Queue
-  getAllItemsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/get-all-items.getAllItemsHandler
-      Runtime: nodejs14.x
-      DeadLetterQueue:
-        Type: SQS 
-        TargetArn: !GetAtt MyQueue.Arn
-      Policies:
-        - SQSSendMessagePolicy:
-            QueueName: !GetAtt MyQueue.QueueName
+* [aws-cli to access local db](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.CLI.html)
+```sh
+$ aws dynamodb list-tables --endpoint-url http://localhost:8000
+{
+    "TableNames": []
+}
+
+$ aws dynamodb create-table \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --attribute-definitions \
+        AttributeName=Artist,AttributeType=S \
+        AttributeName=SongTitle,AttributeType=S \
+    --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
+    --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "Artist",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "SongTitle",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "Music",
+        "KeySchema": [
+            {
+                "AttributeName": "Artist",
+                "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "SongTitle",
+                "KeyType": "RANGE"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2021-11-27T00:01:45.676000-08:00",
+        "ProvisionedThroughput": {
+            "LastIncreaseDateTime": "1969-12-31T16:00:00-08:00",
+            "LastDecreaseDateTime": "1969-12-31T16:00:00-08:00",
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:ddblocal:000000000000:table/Music"
+    }
+}
+
+$ aws dynamodb put-item \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --item \
+        '{"Artist": {"S": "No One You Know"}, "SongTitle": {"S": "Call Me Today"}, "AlbumTitle": {"S": "Somewhat Famous"}}' \
+    --return-consumed-capacity TOTAL  
+{
+    "ConsumedCapacity": {
+        "TableName": "Music",
+        "CapacityUnits": 1.0
+    }
+}
+
+$ aws dynamodb put-item \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --item \
+      '{
+        "Artist": {"S": "Acme Band"},
+        "SongTitle": {"S": "Happy Day"},
+        "AlbumTitle": {"S": "Songs About Life"} 
+      }' \
+    --return-consumed-capacity TOTAL
+{
+    "ConsumedCapacity": {
+        "TableName": "Music",
+        "CapacityUnits": 1.0
+    }
+}
+
+$ cat key-conditions.json
+{
+    "Artist": {
+        "AttributeValueList": [
+            {
+                "S": "No One You Know"
+            }
+        ],
+        "ComparisonOperator": "EQ"
+    },
+    "SongTitle": {
+        "AttributeValueList": [
+            {
+                "S": "Call Me Today"
+            }
+        ],
+        "ComparisonOperator": "EQ"
+    }
+}
+
+$ aws dynamodb query --endpoint-url http://localhost:8000 --table-name Music --key-conditions file://key-conditions.json
+{
+    "Items": [
+        {
+            "Artist": {
+                "S": "No One You Know"
+            },
+            "SongTitle": {
+                "S": "Call Me Today"
+            },
+            "AlbumTitle": {
+                "S": "Somewhat Famous"
+            }
+        }
+    ],
+    "Count": 1,
+    "ScannedCount": 1,
+    "ConsumedCapacity": null
+}
+
+$ aws dynamodb create-table --table-name SampleTable --attribute-definitions AttributeName=id,AttributeType=N AttributeName=name,AttributeType=S --key-schema AttributeName=id,KeyType=HASH AttributeName=name,KeyType=RANGE --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --endpoint-url http://localhost:8000
+
+$ sam local invoke getAllItemsFunction --event events/event-get-all-items.json --parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=SAMPLE_TABLE,ParameterValue=SampleTable --docker-network local-dev
 ```
 
-The dead-letter queue is a location for Lambda to send events that could not be processed. It's only used if you invoke your function asynchronously, but it's useful here to show how you can modify your application's resources and function configuration.
-
-Deploy the updated application.
-
-```bash
-my-application$ sam deploy
-```
-
-Open the [**Applications**](https://console.aws.amazon.com/lambda/home#/applications) page of the Lambda console, and choose your application. When the deployment completes, view the application resources on the **Overview** tab to see the new resource. Then, choose the function to see the updated configuration that specifies the dead-letter queue.
-
-## Fetch, tail, and filter Lambda function logs
-
-To simplify troubleshooting, the AWS SAM CLI has a command called `sam logs`. `sam logs` lets you fetch logs that are generated by your Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.
-
-**NOTE:** This command works for all Lambda functions, not just the ones you deploy using AWS SAM.
-
-```bash
-my-application$ sam logs -n putItemFunction --stack-name sam-app --tail
-```
-
-**NOTE:** This uses the logical name of the function within the stack. This is the correct name to use when searching logs inside an AWS Lambda function within a CloudFormation stack, even if the deployed function name varies due to CloudFormation's unique resource name generation.
-
-You can find more information and examples about filtering Lambda function logs in the [AWS SAM CLI documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html).
-
-## Unit tests
-
-Tests are defined in the `__tests__` folder in this project. Use `npm` to install the [Jest test framework](https://jestjs.io/) and run unit tests.
-
-```bash
-my-application$ npm install
-my-application$ npm run test
-```
-
-## Cleanup
-
-To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
-
-```bash
-aws cloudformation delete-stack --stack-name sam-web-api
-```
-
-## Resources
-
-For an introduction to the AWS SAM specification, the AWS SAM CLI, and serverless application concepts, see the [AWS SAM Developer Guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html).
-
-Next, you can use the AWS Serverless Application Repository to deploy ready-to-use apps that go beyond Hello World samples and learn how authors developed their applications. For more information, see the [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/) and the [AWS Serverless Application Repository Developer Guide](https://docs.aws.amazon.com/serverlessrepo/latest/devguide/what-is-serverlessrepo.html).
+* [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
