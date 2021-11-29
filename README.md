@@ -390,6 +390,7 @@ $ aws dynamodb delete-table --table-name SampleTable --endpoint-url http://local
 ```
 
 * [NoSQL Workbench](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
+
 *SampleTable* Metadata:
 ![SampleTable Metadata](docs/img/Remote-SampleTable-Metadata.jpg)
 
@@ -515,4 +516,13 @@ $ aws dynamodb query --endpoint-url http://localhost:8000 --table-name Music --k
     "ScannedCount": 1,
     "ConsumedCapacity": null
 }
+```
+
+## 5. Working with AWS CloudFormation
+```sh
+$ aws cloudformation describe-stack-events --stack-name sam-web-api
+$ aws cloudformation list-stack-resources --stack-name sam-web-api
+
+$ aws cloudformation get-template --stack-name sam-web-api
+$ aws cloudformation get-template --stack-name sam-web-api > cf-template.json
 ```
